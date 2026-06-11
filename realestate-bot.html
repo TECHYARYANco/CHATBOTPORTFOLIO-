@@ -4,25 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Real Estate Bot — Techy Aryan</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #090b10;
-    --surface: #0f1218;
-    --surface2: #161b24;
-    --border: #232d3e;
-    --accent: #f59e0b;
-    --accent-glow: rgba(245,158,11,0.2);
-    --text: #f0f4ff;
-    --muted: #7a8aa0;
-    --bot-bubble: #161b24;
-  }
-  body {
-    background:var(--bg); font-family:'Inter',sans-serif; color:var(--text);
-    min-height:100vh; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; padding:20px;
-  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#090b10;--surface:#0f1218;--surface2:#161b24;--border:#232d3e;--accent:#f59e0b;--text:#f0f4ff;--muted:#7a8aa0}
+  body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
   .wrapper{width:100%;max-width:480px}
   .chat-header{background:var(--surface);border:1px solid var(--border);border-bottom:none;border-radius:16px 16px 0 0;padding:18px 20px;display:flex;align-items:center;gap:14px}
   .bot-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#d97706,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 20px rgba(245,158,11,0.4)}
@@ -41,13 +27,13 @@
   .msg-avatar{width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px}
   .msg.user .msg-avatar{background:var(--accent)}
   .bubble{padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.55;color:var(--text)}
-  .msg.bot .bubble{background:var(--bot-bubble);border:1px solid var(--border);border-bottom-left-radius:4px}
+  .msg.bot .bubble{background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px}
   .msg.user .bubble{background:var(--accent);border-bottom-right-radius:4px;color:#1a1000}
   .quick-replies{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 4px 38px;animation:fadeUp 0.3s ease}
   .qr-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:7px 14px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s,color 0.2s;white-space:nowrap}
   .qr-btn:hover{background:var(--accent);color:#1a1000}
   .typing{display:flex;align-items:center;gap:10px}
-  .typing-dots{background:var(--bot-bubble);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px;padding:12px 16px;display:flex;gap:5px;align-items:center}
+  .typing-dots{background:var(--surface);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px;padding:12px 16px;display:flex;gap:5px;align-items:center}
   .typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:bounce 1.2s infinite}
   .typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
   @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
@@ -74,124 +60,94 @@
   </div>
   <div class="chat-window" id="chatWindow"></div>
   <div class="chat-input">
-    <input type="text" id="userInput" placeholder="Search properties, schedule viewings..." />
+    <input type="text" id="userInput" placeholder="Search properties, schedule viewings..."/>
     <button class="send-btn" onclick="sendMessage()">
       <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
     </button>
   </div>
 </div>
 <div class="brand-strip">Powered by AI · Built by <a href="#">Techy Aryan</a></div>
-
 <script>
-const SYSTEM_PROMPT = `You are a professional and knowledgeable AI assistant for PrimeProperties, a real estate agency.
+const responses = {
+  greeting: "Welcome to PrimeProperties! 🏠 I'm your AI property assistant. Whether you're buying, renting, or selling — I'm here to help you find the perfect match!",
+  buy: "Great! Here are our properties for sale 🏡:\n\n🏠 3BR/2BA House — Westside\n💰 $485,000 | Modern kitchen, large backyard, garage\n\n🏰 4BR/3BA Villa — Northpark\n💰 $720,000 | Pool, smart home, gated community\n\nInterested in either? I can schedule a viewing!",
+  rent: "Here are our rental listings 🔑:\n\n🏢 2BR Apartment — Downtown\n💰 $2,200/mo | City views, gym, rooftop terrace\n\n🏠 1BR Studio — Eastville\n💰 $1,100/mo | Fully furnished, near metro\n\nWant to schedule a viewing?",
+  commercial: "Commercial spaces available 🏢:\n\n📍 Downtown Commercial Space\n💰 $4,500/mo\n📐 1,200 sqft, ground floor\n👥 High foot traffic area\n\nPerfect for retail, offices, or restaurants!\nWant to book a viewing?",
+  viewing: "I'd love to schedule a viewing! 📅\n\nPlease share:\n1️⃣ Which property interests you?\n2️⃣ Preferred date & time\n3️⃣ Your name & phone number\n\nOur agent will confirm within 1 hour!",
+  areas: "We cover these areas 📍:\n\n🌆 Downtown — Urban living, great connectivity\n🌿 Westside — Family-friendly, spacious homes\n🌳 Northpark — Luxury gated communities\n🏙️ Eastville — Affordable, near metro\n🏡 Suburbs — Peaceful, great schools\n\nWhich area interests you?",
+  agent: "Our top agents 👨‍💼:\n\n🏠 James — Buying specialist\n🔑 Priya — Rentals expert\n🏢 Marcus — Commercial properties\n\nAll available Mon–Sat 9am–6pm\nPhone: +1 (555) 456-7890",
+  sell: "Looking to sell? 💰 Great choice!\n\nWe offer:\n✅ Free property valuation\n✅ Professional photography\n✅ Listing on all major platforms\n✅ Average sale in 30 days\n\nShare your property details and I'll connect you with our selling specialist James!",
+  default: "Thanks for reaching out! 🏠 I can help you with:\n\n🏡 Buy a property\n🔑 Rent a property\n💰 Sell your property\n📅 Schedule viewings\n📍 Explore areas"
+};
 
-About PrimeProperties:
-- Agency: PrimeProperties Real Estate
-- Services: Buying, selling, renting residential & commercial properties
-- Areas: Downtown, Westside, Northpark, Eastville, Suburbs
-- Office hours: Mon-Sat 9am-6pm
-- Phone: +1 (555) 456-7890
-- Email: info@primeproperties.com
-
-Available listings (sample):
-- 3BR/2BA House, Westside, $485,000 — modern kitchen, large backyard, garage
-- 2BR Apartment, Downtown, $2,200/mo — city views, gym, rooftop terrace
-- 4BR/3BA Villa, Northpark, $720,000 — pool, smart home, gated community
-- 1BR Studio, Eastville, $1,100/mo — fully furnished, near metro
-- Commercial Space, Downtown, $4,500/mo — 1,200 sqft, ground floor, high foot traffic
-
-Top agents: James (buying), Priya (rentals), Marcus (commercial)
-
-Your job:
-- Help clients find properties matching their needs
-- Schedule viewings and consultations
-- Answer questions about neighborhoods, prices, process
-- Qualify leads: budget, type (buy/rent), bedrooms, area preference
-- Be professional but warm
-- Keep replies concise, useful, and confident 🏠🔑`;
-
-const conversations = [];
-let isTyping = false;
+function getResponse(msg) {
+  const m = msg.toLowerCase();
+  if(m.match(/hi|hello|hey|start/)) return responses.greeting;
+  if(m.match(/buy|purchas|own|for sale/)) return responses.buy;
+  if(m.match(/rent|lease|monthly|tenant/)) return responses.rent;
+  if(m.match(/commercial|office|shop|retail|business/)) return responses.commercial;
+  if(m.match(/view|visit|tour|see|inspect/)) return responses.viewing;
+  if(m.match(/area|location|neighborhood|where|place/)) return responses.areas;
+  if(m.match(/agent|contact|call|speak/)) return responses.agent;
+  if(m.match(/sell|selling|list my/)) return responses.sell;
+  return responses.default;
+}
 
 function appendMessage(role, text) {
   const win = document.getElementById('chatWindow');
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar'; avatar.textContent = role==='bot'?'🏠':'👤';
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble'; bubble.textContent = text;
+  const div = document.createElement('div'); div.className = `msg ${role}`;
+  const avatar = document.createElement('div'); avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'bot' ? '🏠' : '👤';
+  const bubble = document.createElement('div'); bubble.className = 'bubble';
+  bubble.style.whiteSpace = 'pre-line'; bubble.textContent = text;
   div.appendChild(avatar); div.appendChild(bubble);
   win.appendChild(div); win.scrollTop = win.scrollHeight;
 }
 
 function appendQuickReplies(options) {
   const win = document.getElementById('chatWindow');
-  const div = document.createElement('div');
-  div.className = 'quick-replies'; div.id = 'quickReplies';
+  const div = document.createElement('div'); div.className = 'quick-replies'; div.id = 'quickReplies';
   options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'qr-btn'; btn.textContent = opt;
-    btn.onclick = () => { removeQuickReplies(); handleSend(opt); };
-    div.appendChild(btn);
+    const btn = document.createElement('button'); btn.className = 'qr-btn'; btn.textContent = opt;
+    btn.onclick = () => { removeQuickReplies(); handleSend(opt); }; div.appendChild(btn);
   });
   win.appendChild(div); win.scrollTop = win.scrollHeight;
 }
 
-function removeQuickReplies(){ const qr=document.getElementById('quickReplies'); if(qr) qr.remove(); }
+function removeQuickReplies() { const qr = document.getElementById('quickReplies'); if(qr) qr.remove(); }
 
-function showTyping(){
-  const win=document.getElementById('chatWindow');
-  const div=document.createElement('div'); div.className='typing'; div.id='typingIndicator';
-  const avatar=document.createElement('div'); avatar.className='msg-avatar'; avatar.textContent='🏠';
-  const dots=document.createElement('div'); dots.className='typing-dots';
-  dots.innerHTML='<span></span><span></span><span></span>';
-  div.appendChild(avatar); div.appendChild(dots); win.appendChild(div); win.scrollTop=win.scrollHeight;
+function showTyping() {
+  const win = document.getElementById('chatWindow');
+  const div = document.createElement('div'); div.className = 'typing'; div.id = 'typingIndicator';
+  const avatar = document.createElement('div'); avatar.className = 'msg-avatar'; avatar.textContent = '🏠';
+  const dots = document.createElement('div'); dots.className = 'typing-dots';
+  dots.innerHTML = '<span></span><span></span><span></span>';
+  div.appendChild(avatar); div.appendChild(dots); win.appendChild(div); win.scrollTop = win.scrollHeight;
 }
 
-function hideTyping(){ const t=document.getElementById('typingIndicator'); if(t) t.remove(); }
+function hideTyping() { const t = document.getElementById('typingIndicator'); if(t) t.remove(); }
 
-async function callClaude(msg){
-  conversations.push({role:'user',content:msg});
-  const res=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM_PROMPT,messages:conversations})
-  });
-  const data=await res.json();
-  const reply=data.content[0].text;
-  conversations.push({role:'assistant',content:reply});
-  return reply;
+function handleSend(text) {
+  const msg = text.trim(); if (!msg) return;
+  removeQuickReplies(); appendMessage('user', msg); showTyping();
+  setTimeout(() => {
+    hideTyping(); appendMessage('bot', getResponse(msg));
+  }, 800 + Math.random() * 600);
 }
 
-async function handleSend(text){
-  if(isTyping) return;
-  const msg=text.trim(); if(!msg) return;
-  removeQuickReplies(); appendMessage('user',msg);
-  isTyping=true; showTyping();
-  try{
-    const reply=await callClaude(msg);
-    hideTyping(); appendMessage('bot',reply);
-  } catch(e){
-    hideTyping(); appendMessage('bot','Something went wrong. Please try again 🙏');
-  }
-  isTyping=false;
+function sendMessage() {
+  const input = document.getElementById('userInput');
+  const msg = input.value.trim(); if (!msg) return;
+  input.value = ''; handleSend(msg);
 }
 
-function sendMessage(){
-  const input=document.getElementById('userInput');
-  const msg=input.value.trim(); if(!msg) return;
-  input.value=''; handleSend(msg);
-}
+document.getElementById('userInput').addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
 
-document.getElementById('userInput').addEventListener('keydown',e=>{ if(e.key==='Enter') sendMessage(); });
-
-window.onload=()=>{
-  setTimeout(()=>{
-    appendMessage('bot',`Welcome to PrimeProperties! 🏠 I'm your AI property assistant. Whether you're buying, renting, or selling — I'm here to help you find the perfect match. What are you looking for?`);
-    setTimeout(()=>{
-      appendQuickReplies(['🏡 Buy a property','🔑 Rent a property','📅 Schedule a viewing','💰 Check prices','📍 Explore areas']);
-    },400);
-  },600);
+window.onload = () => {
+  setTimeout(() => {
+    appendMessage('bot', "Welcome to PrimeProperties! 🏠 I'm your AI property assistant. Whether you're buying, renting, or selling — I'm here to help you find the perfect match. What are you looking for?");
+    setTimeout(() => appendQuickReplies(['🏡 Buy a property', '🔑 Rent a property', '💰 Sell my property', '📅 Schedule a viewing', '📍 Explore areas']), 500);
+  }, 600);
 };
 </script>
 </body>

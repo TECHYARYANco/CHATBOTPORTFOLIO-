@@ -4,58 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>E-commerce Bot — Techy Aryan</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #08100a;
-    --surface: #0f180f;
-    --surface2: #162016;
-    --border: #1e331e;
-    --accent: #22c55e;
-    --accent-glow: rgba(34,197,94,0.2);
-    --text: #e8f5e8;
-    --muted: #6a9a6a;
-    --bot-bubble: #162016;
-  }
-  body {
-    background: var(--bg); font-family:'Inter',sans-serif; color:var(--text);
-    min-height:100vh; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; padding:20px;
-  }
-  .wrapper { width:100%; max-width:480px; }
-  .chat-header {
-    background:var(--surface); border:1px solid var(--border);
-    border-bottom:none; border-radius:16px 16px 0 0;
-    padding:18px 20px; display:flex; align-items:center; gap:14px;
-  }
-  .bot-avatar {
-    width:44px; height:44px; border-radius:50%;
-    background:linear-gradient(135deg,#16a34a,#22c55e);
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px; flex-shrink:0;
-    box-shadow:0 0 20px rgba(34,197,94,0.4);
-  }
-  .bot-info h3 { font-size:15px; font-weight:600; }
-  .bot-info p { font-size:12px; color:var(--muted); margin-top:2px; }
-  .status-dot {
-    width:8px; height:8px; border-radius:50%; background:#22c55e;
-    display:inline-block; margin-right:6px;
-    box-shadow:0 0 6px #22c55e; animation:pulse-dot 2s infinite;
-  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#08100a;--surface:#0f180f;--surface2:#162016;--border:#1e331e;--accent:#22c55e;--text:#e8f5e8;--muted:#6a9a6a}
+  body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+  .wrapper{width:100%;max-width:480px}
+  .chat-header{background:var(--surface);border:1px solid var(--border);border-bottom:none;border-radius:16px 16px 0 0;padding:18px 20px;display:flex;align-items:center;gap:14px}
+  .bot-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#22c55e);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 20px rgba(34,197,94,0.4)}
+  .bot-info h3{font-size:15px;font-weight:600}
+  .bot-info p{font-size:12px;color:var(--muted);margin-top:2px}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:6px;box-shadow:0 0 6px #22c55e;animation:pulse-dot 2s infinite}
   @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.5}}
-  .powered {
-    margin-left:auto; font-size:10px; color:var(--muted);
-    background:var(--surface2); padding:4px 10px;
-    border-radius:100px; border:1px solid var(--border); white-space:nowrap;
-  }
-  .powered span { color:var(--accent); font-weight:600; }
-  .chat-window {
-    background:var(--bg); border:1px solid var(--border);
-    border-top:none; border-bottom:none;
-    height:420px; overflow-y:auto; padding:20px 16px;
-    display:flex; flex-direction:column; gap:12px; scroll-behavior:smooth;
-  }
+  .powered{margin-left:auto;font-size:10px;color:var(--muted);background:var(--surface2);padding:4px 10px;border-radius:100px;border:1px solid var(--border);white-space:nowrap}
+  .powered span{color:var(--accent);font-weight:600}
+  .chat-window{background:var(--bg);border:1px solid var(--border);border-top:none;border-bottom:none;height:420px;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
   .chat-window::-webkit-scrollbar{width:4px}
   .chat-window::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
   .msg{display:flex;gap:10px;max-width:85%;animation:fadeUp 0.3s ease}
@@ -64,13 +27,13 @@
   .msg-avatar{width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px}
   .msg.user .msg-avatar{background:var(--accent)}
   .bubble{padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.55;color:var(--text)}
-  .msg.bot .bubble{background:var(--bot-bubble);border:1px solid var(--border);border-bottom-left-radius:4px}
+  .msg.bot .bubble{background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px}
   .msg.user .bubble{background:var(--accent);border-bottom-right-radius:4px;color:#fff}
   .quick-replies{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 4px 38px;animation:fadeUp 0.3s ease}
   .qr-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:7px 14px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.2s,color 0.2s;white-space:nowrap}
   .qr-btn:hover{background:var(--accent);color:#fff}
   .typing{display:flex;align-items:center;gap:10px}
-  .typing-dots{background:var(--bot-bubble);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px;padding:12px 16px;display:flex;gap:5px;align-items:center}
+  .typing-dots{background:var(--surface);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px;padding:12px 16px;display:flex;gap:5px;align-items:center}
   .typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:bounce 1.2s infinite}
   .typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
   @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
@@ -97,62 +60,60 @@
   </div>
   <div class="chat-window" id="chatWindow"></div>
   <div class="chat-input">
-    <input type="text" id="userInput" placeholder="Track order, returns, product help..." />
+    <input type="text" id="userInput" placeholder="Track order, returns, product help..."/>
     <button class="send-btn" onclick="sendMessage()">
       <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
     </button>
   </div>
 </div>
 <div class="brand-strip">Powered by AI · Built by <a href="#">Techy Aryan</a></div>
-
 <script>
-const SYSTEM_PROMPT = `You are a helpful AI customer support assistant for ShopSmart, an online electronics and lifestyle store.
+const orders = {'SS-10234':'📦 Your order is packed and ready to ship! Estimated delivery: 2-3 days.','SS-10235':'🚚 Your order is out for delivery! Expected today by 6pm.','SS-10236':'✅ Your order has been delivered! We hope you love your purchase.','SS-10237':'⚙️ Your order is being processed. It will ship within 24 hours.'};
 
-About ShopSmart:
-- Store: ShopSmart Online
-- Products: Electronics, gadgets, home appliances, lifestyle products
-- Shipping: Standard (5-7 days, free over $50), Express (2-3 days, $9.99), Same-day (select cities, $19.99)
-- Returns: 30-day free returns on most items. Electronics: 15 days.
-- Order tracking: Ask for order number (format: SS-XXXXX)
-- Support hours: 24/7 via bot, Human agents Mon-Fri 9am-6pm
-- Common order statuses: Processing, Packed, Shipped, Out for Delivery, Delivered
-- Top categories: Smartphones, Laptops, Headphones, Smart Home, Accessories
-- Warranty: 1 year manufacturer, extended plans available
-- Payment: Cards, PayPal, Apple Pay, Buy Now Pay Later (Klarna)
-- Contact: support@shopsmart.com | 1-800-SHOP-NOW
+const responses = {
+  greeting: "Hey there! 👋 Welcome to ShopSmart Support. I can help you track orders, process returns, answer product questions, and more!",
+  track: "Sure! Please share your order number 📦\n\nFormat: SS-XXXXX\n(Example: SS-10234)\n\nI'll check the status right away!",
+  return: "I can help with your return! ↩️\n\nOur return policy:\n✅ 30 days free returns on most items\n✅ Electronics: 15 days\n✅ Free return shipping included\n\nShare your order number and I'll start the process!",
+  shipping: "Our shipping options 🚚:\n\n📦 Standard: 5-7 days (FREE over $50)\n⚡ Express: 2-3 days ($9.99)\n🚀 Same-day: Select cities ($19.99)\n\nWhich option works for you?",
+  payment: "We accept 💳:\n\n✅ All major credit/debit cards\n✅ PayPal\n✅ Apple Pay\n✅ Buy Now Pay Later (Klarna)\n\nAll payments are 100% secure!",
+  cancel: "To cancel your order, please act quickly! ⚡\n\nOrders can be cancelled within 1 hour of placing.\n\nShare your order number and I'll check if cancellation is still possible!",
+  warranty: "Our warranty policy 🛡️:\n\n✅ 1 year manufacturer warranty on all electronics\n✅ Extended warranty plans available\n✅ Easy claim process\n\nNeed to file a claim? Share your order number!",
+  default: "Thanks for contacting ShopSmart! 😊\n\nI can help you with:\n📦 Order tracking\n↩️ Returns & refunds\n🚚 Shipping info\n💳 Payment options\n❌ Order cancellation"
+};
 
-Your job:
-- Help customers track orders, initiate returns, answer product questions
-- Be efficient, friendly, and solution-focused
-- For order tracking: ask for order number if not given, then provide simulated status
-- Keep responses concise and action-oriented
-- Use relevant emojis 📦🚚✅`;
-
-const conversations = [];
-let isTyping = false;
+function getResponse(msg) {
+  const m = msg.toLowerCase();
+  if(m.match(/hi|hello|hey|start/)) return responses.greeting;
+  if(m.match(/ss-\d+/i)) {
+    const orderNum = msg.match(/ss-\d+/i)[0].toUpperCase();
+    return orders[orderNum] || `I couldn't find order ${orderNum}. Please check the number and try again, or contact support@shopsmart.com 📧`;
+  }
+  if(m.match(/track|where.*order|order.*status|delivery/)) return responses.track;
+  if(m.match(/return|refund|exchange|send back/)) return responses.return;
+  if(m.match(/ship|deliver|how long|arrival/)) return responses.shipping;
+  if(m.match(/pay|payment|card|paypal|klarna/)) return responses.payment;
+  if(m.match(/cancel/)) return responses.cancel;
+  if(m.match(/warrant|guarantee|broke|damage/)) return responses.warranty;
+  return responses.default;
+}
 
 function appendMessage(role, text) {
   const win = document.getElementById('chatWindow');
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar';
+  const div = document.createElement('div'); div.className = `msg ${role}`;
+  const avatar = document.createElement('div'); avatar.className = 'msg-avatar';
   avatar.textContent = role === 'bot' ? '🛒' : '👤';
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble'; bubble.textContent = text;
+  const bubble = document.createElement('div'); bubble.className = 'bubble';
+  bubble.style.whiteSpace = 'pre-line'; bubble.textContent = text;
   div.appendChild(avatar); div.appendChild(bubble);
   win.appendChild(div); win.scrollTop = win.scrollHeight;
 }
 
 function appendQuickReplies(options) {
   const win = document.getElementById('chatWindow');
-  const div = document.createElement('div');
-  div.className = 'quick-replies'; div.id = 'quickReplies';
+  const div = document.createElement('div'); div.className = 'quick-replies'; div.id = 'quickReplies';
   options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'qr-btn'; btn.textContent = opt;
-    btn.onclick = () => { removeQuickReplies(); handleSend(opt); };
-    div.appendChild(btn);
+    const btn = document.createElement('button'); btn.className = 'qr-btn'; btn.textContent = opt;
+    btn.onclick = () => { removeQuickReplies(); handleSend(opt); }; div.appendChild(btn);
   });
   win.appendChild(div); win.scrollTop = win.scrollHeight;
 }
@@ -161,60 +122,35 @@ function removeQuickReplies() { const qr = document.getElementById('quickReplies
 
 function showTyping() {
   const win = document.getElementById('chatWindow');
-  const div = document.createElement('div');
-  div.className = 'typing'; div.id = 'typingIndicator';
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar'; avatar.textContent = '🛒';
-  const dots = document.createElement('div');
-  dots.className = 'typing-dots';
+  const div = document.createElement('div'); div.className = 'typing'; div.id = 'typingIndicator';
+  const avatar = document.createElement('div'); avatar.className = 'msg-avatar'; avatar.textContent = '🛒';
+  const dots = document.createElement('div'); dots.className = 'typing-dots';
   dots.innerHTML = '<span></span><span></span><span></span>';
-  div.appendChild(avatar); div.appendChild(dots);
-  win.appendChild(div); win.scrollTop = win.scrollHeight;
+  div.appendChild(avatar); div.appendChild(dots); win.appendChild(div); win.scrollTop = win.scrollHeight;
 }
 
 function hideTyping() { const t = document.getElementById('typingIndicator'); if(t) t.remove(); }
 
-async function callClaude(msg) {
-  conversations.push({ role:'user', content:msg });
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:SYSTEM_PROMPT, messages:conversations })
-  });
-  const data = await res.json();
-  const reply = data.content[0].text;
-  conversations.push({ role:'assistant', content:reply });
-  return reply;
-}
-
-async function handleSend(text) {
-  if (isTyping) return;
+function handleSend(text) {
   const msg = text.trim(); if (!msg) return;
-  removeQuickReplies();
-  appendMessage('user', msg);
-  isTyping = true; showTyping();
-  try {
-    const reply = await callClaude(msg);
-    hideTyping(); appendMessage('bot', reply);
-  } catch(e) {
-    hideTyping(); appendMessage('bot', 'Something went wrong. Please try again! 🙏');
-  }
-  isTyping = false;
+  removeQuickReplies(); appendMessage('user', msg); showTyping();
+  setTimeout(() => {
+    hideTyping(); appendMessage('bot', getResponse(msg));
+  }, 800 + Math.random() * 600);
 }
 
 function sendMessage() {
   const input = document.getElementById('userInput');
-  const msg = input.value.trim(); if(!msg) return;
+  const msg = input.value.trim(); if (!msg) return;
   input.value = ''; handleSend(msg);
 }
 
-document.getElementById('userInput').addEventListener('keydown', e => { if(e.key==='Enter') sendMessage(); });
+document.getElementById('userInput').addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
 
 window.onload = () => {
   setTimeout(() => {
-    appendMessage('bot', `Hey there! 👋 Welcome to ShopSmart Support. I can help you track orders, process returns, answer product questions, and more. What do you need?`);
-    setTimeout(() => {
-      appendQuickReplies(['📦 Track my order', '↩️ Return an item', '🚚 Shipping info', '💳 Payment options', '🔧 Product help']);
-    }, 400);
+    appendMessage('bot', "Hey there! 👋 Welcome to ShopSmart Support. I can help you track orders, process returns, answer product questions, and more. What do you need?");
+    setTimeout(() => appendQuickReplies(['📦 Track my order', '↩️ Return an item', '🚚 Shipping info', '💳 Payment options']), 500);
   }, 600);
 };
 </script>
